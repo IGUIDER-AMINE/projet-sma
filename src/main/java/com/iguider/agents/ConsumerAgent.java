@@ -147,7 +147,8 @@ public class ConsumerAgent extends GuiAgent {
             //System.out.printf("Agent => " + getAID().getName() +"=>"+bookName);
             ACLMessage aclMessage=new ACLMessage(ACLMessage.REQUEST);
             aclMessage.setContent(bookName);
-            aclMessage.addReceiver(new AID("BookBuyerAgent",AID.ISLOCALNAME));
+            //aclMessage.addReceiver(new AID("BookBuyerAgent",AID.ISLOCALNAME));
+            aclMessage.addReceiver(new AID("ACHETEUR",AID.ISLOCALNAME));
             send(aclMessage);
         }
     }
