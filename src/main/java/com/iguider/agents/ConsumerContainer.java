@@ -75,15 +75,14 @@ public class ConsumerContainer extends Application {
         ProfileImpl profile = new ProfileImpl();
         profile.setParameter(Profile.MAIN_HOST,"localhost");
         AgentContainer container = runtime.createAgentContainer(profile);
-        AgentController consumerController= container.createNewAgent("consumer","com.iguider.agents.ConsumerAgent",new Object[]{this});// this => la référence vers l'interface graphique
+        AgentController consumerController= container.createNewAgent("Consumer","com.iguider.agents.ConsumerAgent",new Object[]{this});// this => la référence vers l'interface graphique
         consumerController.start();
     }
 
     public void logMessage(ACLMessage aclMessage){
         Platform.runLater(()->{
             //l'agent à chaque fois qu'ils veux log quelque chouse dans l'interface il n'a qu'à faire appel à cette méthode
-            observableListData.add(aclMessage.getSender().getName()
-                    +"=>"+aclMessage.getContent());
+            observableListData.add(aclMessage.getContent() + ", " + aclMessage.getSender().getName());
         });
     }
 

@@ -104,7 +104,13 @@ public class ConsumerAgent extends GuiAgent {
                     reply.addReceiver(aclMessage.getSender());
                     reply.setContent("Price=900");
                     send(reply);*/
-                    consumerContainer.logMessage(aclMessage);
+                    switch (aclMessage.getPerformative()){
+                        case ACLMessage.CONFIRM:
+                            consumerContainer.logMessage(aclMessage);
+                            break;
+                        default:
+                            break;
+                    }
                 }else {
                     System.out.println("Bolc......");
                     // qu'il ya un message qui arrive qui concerne l'agent est tout simplement il reçoit une notification

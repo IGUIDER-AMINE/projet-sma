@@ -60,6 +60,10 @@ public class VendeurAgent extends GuiAgent {
                             send(reply);
                             break;
                         case ACLMessage.ACCEPT_PROPOSAL:
+                            ACLMessage aclMessage2=aclMessage.createReply();
+                            aclMessage2.setContent(aclMessage.getContent());
+                            aclMessage2.setPerformative(ACLMessage.AGREE);// il faut consulter le stock pour répondre par accepte ou refuse
+                            send(aclMessage2);
                             break;
                         default:
                             break;

@@ -2,6 +2,7 @@ package com.iguider.agents;
 
 import com.iguider.agents.buyer.BookBuyerGui;
 import jade.core.AID;
+import jade.core.ServiceNotActiveException;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.core.behaviours.TickerBehaviour;
@@ -13,6 +14,9 @@ import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AcheteurAgent extends GuiAgent {
     protected AcheteurGui gui;
@@ -49,6 +53,8 @@ public class AcheteurAgent extends GuiAgent {
         });
 
         parallelBehaviour.addSubBehaviour(new CyclicBehaviour() {
+            private int counter=0;
+            private List<ACLMessage> replies = new ArrayList<ACLMessage>();
             @Override
             public void action() {
                 //accept just les message REQUEST & fr
@@ -79,8 +85,29 @@ public class AcheteurAgent extends GuiAgent {
 
                             break;
                         case ACLMessage.PROPOSE :
+                            ++counter;
+                            replies.add(aclMessage);
+                            if(counter==vendeurs.length){
+                                ACLMessage meilleurOffre = replies.get(0);
+                                double mini=Double.parseDouble(meilleurOffre.getContent());
+
+                                for(ACLMessage offre:replies){
+                                    double price=Double.parseDouble(offre.getContent());
+                                    if(price<mini){
+                                        meilleurOffre=offre;
+                                        mini=price;
+                                    }
+                                }
+                                ACLMessage aclMessageAccept = meilleurOffre.createReply();
+                                aclMessage.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                                send(aclMessageAccept);
+                            }
                             break;
                         case ACLMessage.AGREE :
+                            ACLMessage aclMessage3 = new ACLMessage(ACLMessage.CONFIRM);
+                            aclMessage3.addReceiver(new AID("Consumer",AID.ISLOCALNAME));
+                            aclMessage3.setContent(aclMessage.getContent());
+                            send(aclMessage3);
                             break;
                         case ACLMessage.REFUSE :
                             break;
