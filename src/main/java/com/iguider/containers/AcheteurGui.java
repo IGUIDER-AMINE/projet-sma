@@ -1,6 +1,6 @@
-package com.iguider.agents;
+package com.iguider.containers;
 
-import com.iguider.agents.buyer.BookBuyerAgent;
+import com.iguider.agents.AcheteurAgent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -11,7 +11,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
@@ -19,7 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class AcheteurGui extends Application {
-    protected AcheteurAgent acheteurAgent;
+    public AcheteurAgent acheteurAgent;
     protected ObservableList<String> observableListData;
     public static void main(String[] args) {
         launch(args);
@@ -27,7 +26,7 @@ public class AcheteurGui extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         startContainer();
-        primaryStage.setTitle("Acheteur Gui");
+        primaryStage.setTitle("Acheteur :");
         BorderPane borderPane = new BorderPane();
         VBox vBox = new VBox();
         observableListData = FXCollections.observableArrayList();
@@ -49,7 +48,6 @@ public class AcheteurGui extends Application {
                 AcheteurAgent.class.getName(),
                 new Object[]{this});// this => la référence vers l'interface graphique
         agentController.start();
-        //agentContainer.start();//l'agent déployer mais il n'est pas démarré
     }
 
     public void logMessage(ACLMessage aclMessage){

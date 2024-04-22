@@ -1,7 +1,7 @@
 package com.iguider.agents;
 
+import com.iguider.containers.ConsumerContainer;
 import jade.core.AID;
-import jade.core.Agent;
 import jade.core.behaviours.*;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
@@ -146,7 +146,7 @@ public class ConsumerAgent extends GuiAgent {
     }
 
     @Override
-    protected void onGuiEvent(GuiEvent evt) {
+    public void onGuiEvent(GuiEvent evt) {
         // execute lorque un événement se produit dans l'interface graphique
         if(evt.getType()==1){
             String bookName = (String)evt.getParameter(0);

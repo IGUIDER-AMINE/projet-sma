@@ -1,8 +1,7 @@
 package com.iguider.agents;
 
-import com.iguider.agents.buyer.BookBuyerGui;
+import com.iguider.containers.AcheteurGui;
 import jade.core.AID;
-import jade.core.ServiceNotActiveException;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.core.behaviours.TickerBehaviour;
@@ -123,10 +122,10 @@ public class AcheteurAgent extends GuiAgent {
                     replay.setContent("Ok pou "+aclMessage.getContent());
                     send(replay);
 
-                    ACLMessage aclMessage3 = new ACLMessage(ACLMessage.CFP);//call for proposal
+                    /*ACLMessage aclMessage3 = new ACLMessage(ACLMessage.CFP);//call for proposal
                     aclMessage3.setContent(livre);
                     aclMessage3.addReceiver(new AID("VENDEUR", AID.ISLOCALNAME));
-                    send(aclMessage3);
+                    send(aclMessage3);*/
                 }
                 else{
                     block();

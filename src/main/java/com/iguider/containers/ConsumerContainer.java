@@ -1,5 +1,6 @@
-package com.iguider.agents;
+package com.iguider.containers;
 
+import com.iguider.agents.ConsumerAgent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -10,7 +11,6 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -26,7 +26,7 @@ import javafx.scene.control.TextField;
 
 public class ConsumerContainer extends Application {
     // la relation entre l'interface graphique et l'agent c'est une relation qui bidirectionnelle => l'interface graphique a besoin d'une référence vers l'agent et l'agent a besoin d'une références vers l'interface graphique
-    protected ConsumerAgent consumerAgent;
+    public ConsumerAgent consumerAgent;
     protected ObservableList<String> observableListData;
 
     //déployer un agent
@@ -37,7 +37,7 @@ public class ConsumerContainer extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         startContainer();
-        primaryStage.setTitle("Consumer Container");
+        primaryStage.setTitle("Consumer :");
         BorderPane borderPane = new BorderPane();
 
         HBox hBox1 =new HBox();
@@ -61,7 +61,6 @@ public class ConsumerContainer extends Application {
             String bookName = textFieldBookName.getText();
             GuiEvent guiEvent = new GuiEvent(this,1);
             guiEvent.addParameter(bookName);
-            //observableListData.add(bookName);
             consumerAgent.onGuiEvent(guiEvent);
         });
 
@@ -82,7 +81,7 @@ public class ConsumerContainer extends Application {
     public void logMessage(ACLMessage aclMessage){
         Platform.runLater(()->{
             //l'agent à chaque fois qu'ils veux log quelque chouse dans l'interface il n'a qu'à faire appel à cette méthode
-            observableListData.add(aclMessage.getContent() + ", " + aclMessage.getSender().getName());
+            observableListData.add(aclMessage.getContent() + ": " + aclMessage.getSender().getName());
         });
     }
 

@@ -1,6 +1,6 @@
 package com.iguider.agents;
 
-import com.iguider.agents.buyer.BookBuyerGui;
+import com.iguider.containers.VendeurGui;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
