@@ -4,12 +4,19 @@ import com.iguider.agents.buyer.BookBuyerGui;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
+import jade.core.behaviours.TickerBehaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 public class AcheteurAgent extends GuiAgent {
     protected AcheteurGui gui;
+    protected AID[] vendeurs;
     @Override
     protected void setup() {
         if(getArguments().length==1){
@@ -20,12 +27,67 @@ public class AcheteurAgent extends GuiAgent {
         ParallelBehaviour parallelBehaviour= new ParallelBehaviour();
         addBehaviour(parallelBehaviour);
 
+        parallelBehaviour.addSubBehaviour(new TickerBehaviour(this,5000) {
+            @Override
+            protected void onTick() {
+                //chercher des services chaque 5 secondes
+                DFAgentDescription dfAgentDescription = new DFAgentDescription();
+                ServiceDescription serviceDescription = new ServiceDescription();
+                serviceDescription.setType("transaction");
+                serviceDescription.setName("vente-livres");
+                dfAgentDescription.addServices(serviceDescription);
+                try {
+                    DFAgentDescription[] results = DFService.search(myAgent,dfAgentDescription);
+                    vendeurs = new AID[results.length];
+                    for (int i=0;i<vendeurs.length;i++){
+                        vendeurs[i]=results[i].getName();
+                    }
+                } catch (FIPAException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
         parallelBehaviour.addSubBehaviour(new CyclicBehaviour() {
             @Override
             public void action() {
+                //accept just les message REQUEST & fr
+                //MessageTemplate messageTemplate=MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+                MessageTemplate messageTemplate = MessageTemplate.or(
+                        MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
+                        MessageTemplate.or(
+                                MessageTemplate.MatchPerformative(ACLMessage.PROPOSE),
+                                MessageTemplate.or(
+                                        MessageTemplate.MatchPerformative(ACLMessage.AGREE),
+                                        MessageTemplate.MatchPerformative(ACLMessage.REFUSE)
+                                )
+                        )
+                );
                 //attendre des messages
-                ACLMessage aclMessage = receive();
+                ACLMessage aclMessage = receive(messageTemplate);
                 if(aclMessage!=null){
+
+                    switch (aclMessage.getPerformative()){ //act de communication
+                        case ACLMessage.REQUEST :
+                            String livre = aclMessage.getContent();
+                            ACLMessage aclMessage2 = new ACLMessage(ACLMessage.CFP);
+                            aclMessage2.setContent(livre);
+                            for(AID aid:vendeurs){
+                                aclMessage2.addReceiver(aid);
+                            }
+                            send(aclMessage2);
+
+                            break;
+                        case ACLMessage.PROPOSE :
+                            break;
+                        case ACLMessage.AGREE :
+                            break;
+                        case ACLMessage.REFUSE :
+                            break;
+                        default:
+                            break;
+                    }
+
                     String livre = aclMessage.getContent();
                     // log le message dans l'interface graphique
                     gui.logMessage(aclMessage);
