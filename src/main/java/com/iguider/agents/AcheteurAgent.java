@@ -107,16 +107,16 @@ public class AcheteurAgent extends GuiAgent {
                             }
                             break;
                         case ACLMessage.AGREE :
-                            ACLMessage aclMessage3 = new ACLMessage(ACLMessage.CONFIRM);
-                            aclMessage3.addReceiver(new AID("Consumer",AID.ISLOCALNAME));
-                            aclMessage3.setContent("Best price : "+aclMessage.getContent());
-                            send(aclMessage3);
+                            ACLMessage reply = new ACLMessage(ACLMessage.CONFIRM);
+                            reply.addReceiver(new AID("Consumer",AID.ISLOCALNAME));
+                            reply.setContent("Best price : "+aclMessage.getContent());
+                            send(reply);
                             break;
                         case ACLMessage.REFUSE :
-                            ACLMessage aclMessage4 = new ACLMessage(ACLMessage.CONFIRM);
-                            aclMessage4.addReceiver(new AID("Consumer",AID.ISLOCALNAME));
-                            aclMessage4.setContent("Book not found in stock ! ");
-                            send(aclMessage4);
+                            ACLMessage reply2 = new ACLMessage(ACLMessage.CONFIRM);
+                            reply2.addReceiver(new AID("Consumer",AID.ISLOCALNAME));
+                            reply2.setContent("Book not found in stock ! ");
+                            send(reply2);
                             break;
                         default:
                             break;

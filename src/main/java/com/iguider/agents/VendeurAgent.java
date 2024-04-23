@@ -60,15 +60,16 @@ public class VendeurAgent extends GuiAgent {
                             reply.setContent(String.valueOf(500+new Random().nextInt(1000)));// nomber entre 0 et 1000
                             break;
                         case ACLMessage.ACCEPT_PROPOSAL:
-                            // decide whether to accept proposal or not
+                            // accept proposal or not
                             Random random = new Random();
                             double randomNumber = random.nextDouble();
-                            boolean accept = randomNumber < 0.7;
+                            boolean accept = randomNumber < 0.5;
                             if(accept){
                                 reply.setPerformative(ACLMessage.AGREE);// il faut consulter le stock pour répondre par accepte ou refuse
                                 reply.setContent(aclMessage.getContent());
                             }else{
                                 reply.setPerformative(ACLMessage.REFUSE);
+                                reply.setContent("Refuse");
                             }
                             break;
                         default:
