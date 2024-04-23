@@ -52,22 +52,29 @@ public class VendeurAgent extends GuiAgent {
                 if(aclMessage!=null){
                     // log le message dans l'interface graphique
                     gui.logMessage(aclMessage);
+                    ACLMessage reply = aclMessage.createReply();
+
                     switch (aclMessage.getPerformative()){
                         case ACLMessage.CFP :
-                            ACLMessage reply = aclMessage.createReply();
                             reply.setPerformative(ACLMessage.PROPOSE);
                             reply.setContent(String.valueOf(500+new Random().nextInt(1000)));// nomber entre 0 et 1000
-                            send(reply);
                             break;
                         case ACLMessage.ACCEPT_PROPOSAL:
-                            ACLMessage aclMessage2=aclMessage.createReply();
-                            aclMessage2.setContent(aclMessage.getContent());
-                            aclMessage2.setPerformative(ACLMessage.AGREE);// il faut consulter le stock pour répondre par accepte ou refuse
-                            send(aclMessage2);
+                            // decide whether to accept proposal or not
+                            Random random = new Random();
+                            double randomNumber = random.nextDouble();
+                            boolean accept = randomNumber < 0.7;
+                            if(accept){
+                                reply.setPerformative(ACLMessage.AGREE);// il faut consulter le stock pour répondre par accepte ou refuse
+                                reply.setContent(aclMessage.getContent());
+                            }else{
+                                reply.setPerformative(ACLMessage.REFUSE);
+                            }
                             break;
                         default:
                             break;
                     }
+                    send(reply);
                 }
                 else{
                     block();

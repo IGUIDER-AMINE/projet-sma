@@ -1,0 +1,8 @@
+SMA :
+main-container => tools => start sniffer
+C:\Users\T15\Desktop\Master_S2\Systèmes Multi Agents et Intelligence Artificielle\projet-sma
+1:34
+
+AID => l'identifient de l'agent
+AID[] => tableau d'agent
+result[i].getName() =>id de l'agent qui offer ce service

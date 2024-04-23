@@ -81,7 +81,7 @@ public class ConsumerContainer extends Application {
     public void logMessage(ACLMessage aclMessage){
         Platform.runLater(()->{
             //l'agent à chaque fois qu'ils veut log quelque chose dans l'interface il n'a qu'à faire appel à cette méthode
-            observableListData.add(aclMessage.getSender().getName()+ " best price : " + aclMessage.getContent());
+            observableListData.add(aclMessage.getSender().getName()+ " " + aclMessage.getContent());
         });
     }
 
