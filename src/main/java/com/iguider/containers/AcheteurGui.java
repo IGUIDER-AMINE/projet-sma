@@ -26,7 +26,7 @@ public class AcheteurGui extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         startContainer();
-        primaryStage.setTitle("Acheteur :");
+        primaryStage.setTitle("Acheteur Interface :");
         BorderPane borderPane = new BorderPane();
         VBox vBox = new VBox();
         observableListData = FXCollections.observableArrayList();
@@ -52,8 +52,8 @@ public class AcheteurGui extends Application {
 
     public void logMessage(ACLMessage aclMessage){
         Platform.runLater(()->{
-            //l'agent à chaque fois qu'ils veux log quelque chouse dans l'interface il n'a qu'à faire appel à cette méthode
-            observableListData.add(aclMessage.getContent() + ", " + aclMessage.getSender().getName());
+            //l'agent à chaque fois qu'ils veut log quelque chose dans l'interface il n'a qu'à faire appel à cette méthode
+            observableListData.add(aclMessage.getSender().getName() + " : " + aclMessage.getContent());
         });
     }
 

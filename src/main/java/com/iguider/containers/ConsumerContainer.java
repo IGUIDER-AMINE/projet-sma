@@ -37,7 +37,7 @@ public class ConsumerContainer extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         startContainer();
-        primaryStage.setTitle("Consumer :");
+        primaryStage.setTitle("Consumer Interface :");
         BorderPane borderPane = new BorderPane();
 
         HBox hBox1 =new HBox();
@@ -80,8 +80,8 @@ public class ConsumerContainer extends Application {
 
     public void logMessage(ACLMessage aclMessage){
         Platform.runLater(()->{
-            //l'agent à chaque fois qu'ils veux log quelque chouse dans l'interface il n'a qu'à faire appel à cette méthode
-            observableListData.add(aclMessage.getContent() + ": " + aclMessage.getSender().getName());
+            //l'agent à chaque fois qu'ils veut log quelque chose dans l'interface il n'a qu'à faire appel à cette méthode
+            observableListData.add(aclMessage.getSender().getName()+ " best price : " + aclMessage.getContent());
         });
     }
 

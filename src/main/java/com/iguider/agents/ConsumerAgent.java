@@ -21,70 +21,17 @@ public class ConsumerAgent extends GuiAgent {
     protected void setup() {
         String bookName=null;
         if(this.getArguments().length==1){
-            // la relation bidirectionnelle entre l'agent et l-interface graphique
+            // la relation bidirectionnelle entre l'agent et l'interface graphique
             consumerContainer=(ConsumerContainer)getArguments()[0];//refrence vers l'interface => protected ConsumerAgent consumerAgent;
             consumerContainer.consumerAgent=this; //this => consumerAgent
         }
         System.out.println("Initialisation de l'agent " + this.getAID().getName());
         System.out.println("I'm trying to buy the book " + bookName);
-        //gerer plusieurs tache en parallele
+
+        //gérer plusieurs tâches en parallèle
         ParallelBehaviour parallelBehaviour = new ParallelBehaviour();
         //affecter les comportements
         addBehaviour(parallelBehaviour);
-
-        /*addBehaviour(new Behaviour() {
-            private int counter=0;
-            @Override
-            public void action() {
-                System.out.println("----------------");
-                System.out.println("Step " + counter);
-                System.out.println("----------------");
-                ++counter;
-            }
-
-            @Override
-            public boolean done() {
-                return (counter==10);
-            }
-        });*/
-
-        parallelBehaviour.addSubBehaviour(new OneShotBehaviour() {
-            @Override
-            public void action() {
-                System.out.println("One Shot Behaviour");
-            }
-        });
-
-        /*addBehaviour(new CyclicBehaviour() {
-            private int counter=0;
-            @Override
-            public void action() {
-                System.out.println("Counter =>"+counter);
-                ++counter;
-            }
-        });*/
-
-        /*addBehaviour(new TickerBehaviour(this,1000) {
-            @Override
-            protected void onTick() {
-                System.out.println("Tic");
-                System.out.println(myAgent.getAID().getLocalName());
-            }
-        });*/
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy:HH:mm");
-        Date date= null;
-        try {
-            date= dateFormat.parse("24/05/2021:10:59");
-        }catch (ParseException e){
-            e.printStackTrace();
-        }
-        parallelBehaviour.addSubBehaviour(new WakerBehaviour(this,date) {
-            @Override
-            protected void onWake() {
-                System.out.println("Waker Behaviour ....");
-            }
-        });
 
         parallelBehaviour.addSubBehaviour(new CyclicBehaviour() {
             @Override
@@ -98,12 +45,8 @@ public class ConsumerAgent extends GuiAgent {
                 if(aclMessage!=null){
                     System.out.println("Sender : " + aclMessage.getSender().getName());
                     System.out.println("Content : " + aclMessage.getContent());
-                    //System.out.println("SpeechAct : "+ ACLMessage.getPerformative(aclMessage.ACCEPT_PROPOSAL));
+                    System.out.println("SpeechAct : "+ ACLMessage.getPerformative(aclMessage.ACCEPT_PROPOSAL));
 
-                    /*ACLMessage reply = new ACLMessage(ACLMessage.CONFIRM);
-                    reply.addReceiver(aclMessage.getSender());
-                    reply.setContent("Price=900");
-                    send(reply);*/
                     switch (aclMessage.getPerformative()){
                         case ACLMessage.CONFIRM:
                             consumerContainer.logMessage(aclMessage);
@@ -111,10 +54,10 @@ public class ConsumerAgent extends GuiAgent {
                         default:
                             break;
                     }
+
                 }else {
                     System.out.println("Bolc......");
-                    // qu'il ya un message qui arrive qui concerne l'agent est tout simplement il reçoit une notification
-                    // ce qui permet donc de débloquer cette méthode bloc et automatiquement il reviet la methode d'action
+                    // si un message qui arrive qui concerne l'agent est tout simplement il reçoit une notification ,ce qui permet donc de débloquer cette méthode bloc et automatiquement il revient la méthode d'action
                     block();
                 }
             }
@@ -147,13 +90,11 @@ public class ConsumerAgent extends GuiAgent {
 
     @Override
     public void onGuiEvent(GuiEvent evt) {
-        // execute lorque un événement se produit dans l'interface graphique
+        // exécuter lorsqu'un événement se produit dans l'interface graphique
         if(evt.getType()==1){
             String bookName = (String)evt.getParameter(0);
-            //System.out.printf("Agent => " + getAID().getName() +"=>"+bookName);
             ACLMessage aclMessage=new ACLMessage(ACLMessage.REQUEST);
-            aclMessage.setContent(bookName);
-            //aclMessage.addReceiver(new AID("BookBuyerAgent",AID.ISLOCALNAME));
+            aclMessage.setContent("wants " + bookName);
             aclMessage.addReceiver(new AID("ACHETEUR",AID.ISLOCALNAME));
             send(aclMessage);
         }

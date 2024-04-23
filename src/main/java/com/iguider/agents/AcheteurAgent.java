@@ -86,9 +86,10 @@ public class AcheteurAgent extends GuiAgent {
                         case ACLMessage.PROPOSE :
                             ++counter;
                             replies.add(aclMessage);
+                            double mini=0;
                             if(counter==vendeurs.length){
                                 ACLMessage meilleurOffre = replies.get(0);
-                                double mini=Double.parseDouble(meilleurOffre.getContent());
+                                mini=Double.parseDouble(meilleurOffre.getContent());
 
                                 for(ACLMessage offre:replies){
                                     double price=Double.parseDouble(offre.getContent());
@@ -98,8 +99,11 @@ public class AcheteurAgent extends GuiAgent {
                                     }
                                 }
                                 ACLMessage aclMessageAccept = meilleurOffre.createReply();
-                                aclMessage.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                                aclMessageAccept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                                aclMessageAccept.setContent(String.valueOf(mini));
                                 send(aclMessageAccept);
+                                counter=0;
+                                replies.clear();
                             }
                             break;
                         case ACLMessage.AGREE :
@@ -114,18 +118,8 @@ public class AcheteurAgent extends GuiAgent {
                             break;
                     }
 
-                    String livre = aclMessage.getContent();
                     // log le message dans l'interface graphique
                     gui.logMessage(aclMessage);
-
-                    ACLMessage replay = aclMessage.createReply(); // je vais répondre aux memes sender
-                    replay.setContent("Ok pou "+aclMessage.getContent());
-                    send(replay);
-
-                    /*ACLMessage aclMessage3 = new ACLMessage(ACLMessage.CFP);//call for proposal
-                    aclMessage3.setContent(livre);
-                    aclMessage3.addReceiver(new AID("VENDEUR", AID.ISLOCALNAME));
-                    send(aclMessage3);*/
                 }
                 else{
                     block();

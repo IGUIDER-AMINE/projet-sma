@@ -36,13 +36,13 @@ public class VendeurGui extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         startContainer();
-        primaryStage.setTitle("Vendeur :");
+        primaryStage.setTitle("Vendeur Interface :");
 
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(10));
         hBox.setSpacing(10);
 
-        Label label = new Label("Agent name:");
+        Label label = new Label("Agent name :");
         TextField textFieldAgentName = new TextField();
         Button buttonDeploy = new Button("Deploy");
         hBox.getChildren().addAll(label,textFieldAgentName,buttonDeploy);
@@ -65,7 +65,7 @@ public class VendeurGui extends Application {
             //deploy l'agent
             try {
                 String name=textFieldAgentName.getText();
-                //BookBuyerAgent.class.getName() => "com.iguider.agents.buyer.BookBuyerAgent"
+                //BookBuyerAgent.class.getName() => "com.iguider.agents.buyer.VendeurGui"
                 AgentController agentController= agentContainer.createNewAgent(
                         name,
                         VendeurAgent.class.getName(),
@@ -80,14 +80,14 @@ public class VendeurGui extends Application {
     private void startContainer() throws Exception {
         Runtime runtime = Runtime.instance();
         ProfileImpl profile = new ProfileImpl();
-        profile.setParameter(Profile.MAIN_HOST,"localhost");// ou se trouve le main container
+        profile.setParameter(Profile.MAIN_HOST,"localhost");// où se trouve le main container
         agentContainer = runtime.createAgentContainer(profile);
     }
 
     public void logMessage(ACLMessage aclMessage){
         Platform.runLater(()->{
-            //l'agent à chaque fois qu'ils veux log quelque chouse dans l'interface il n'a qu'à faire appel à cette méthode
-            observableListData.add(aclMessage.getContent() + ", " + aclMessage.getSender().getName());
+            //l'agent à chaque fois qu'ils veut log quelque chose dans l'interface il n'a qu'à faire appel à cette méthode
+            observableListData.add(aclMessage.getSender().getName() + " " + aclMessage.getContent());
         });
     }
 }
